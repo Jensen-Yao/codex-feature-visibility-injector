@@ -2,7 +2,19 @@
 
 # CodexUnhide
 
-这是一个配合 Codex++ 使用的用户脚本，用于在 Codex Desktop 启动时自动注入本地 feature gate 覆盖，让部分因为 Statsig/网络初始化失败而隐藏的入口重新显示。
+CodexUnhide 是一个配合 Codex++ 使用的用户脚本，用于在 Codex Desktop 启动时自动注入本地 feature gate 覆盖，让部分因为 Statsig/网络初始化失败而隐藏的入口重新显示。
+
+GitHub 仓库地址：
+
+```text
+https://github.com/Jensen-Yao/CodexUnhide
+```
+
+也可以直接在 GitHub 搜索：
+
+```text
+Jensen-Yao/CodexUnhide
+```
 
 当前覆盖的入口包括：
 
@@ -22,7 +34,15 @@
 
 ## 一键安装
 
-在 PowerShell 中进入本仓库目录，然后运行：
+在 PowerShell 中克隆本仓库，然后运行安装脚本：
+
+```powershell
+git clone https://github.com/Jensen-Yao/CodexUnhide.git
+cd CodexUnhide
+powershell -ExecutionPolicy Bypass -File .\install.ps1
+```
+
+如果已经下载或解压了本仓库，也可以直接在仓库目录运行：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\install.ps1
