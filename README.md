@@ -1,6 +1,6 @@
 # 大家好，这是一个配合codex++用的脚本，希望能帮助到有需要的人
 
-# Codex Feature Visibility Injector
+# CodexUnhide
 
 这是一个配合 Codex++ 使用的用户脚本，用于在 Codex Desktop 启动时自动注入本地 feature gate 覆盖，让部分因为 Statsig/网络初始化失败而隐藏的入口重新显示。
 
