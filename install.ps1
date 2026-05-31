@@ -19,12 +19,12 @@ Copy-Item -LiteralPath $sourceScript -Destination $targetScript -Force
 if (Test-Path -LiteralPath $configPath) {
   $raw = Get-Content -Raw -LiteralPath $configPath
   if ([string]::IsNullOrWhiteSpace($raw)) {
-    $config = [ordered]@{}
+    $config = [pscustomobject]@{}
   } else {
     $config = $raw | ConvertFrom-Json
   }
 } else {
-  $config = [ordered]@{}
+  $config = [pscustomobject]@{}
 }
 
 if ($null -eq $config.enabled) {
