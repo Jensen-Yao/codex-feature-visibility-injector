@@ -42,7 +42,9 @@ New-Item -ItemType Directory -Force -Path $userScriptsDir | Out-Null
 New-Item -ItemType Directory -Force -Path $pluginRepairDir | Out-Null
 
 Copy-Item -LiteralPath $featureSource -Destination (Join-Path $userScriptsDir "codex-feature-visibility-injector.js") -Force
-Copy-Item -LiteralPath (Join-Path $pluginRepairSource "*") -Destination $pluginRepairDir -Recurse -Force
+Get-ChildItem -LiteralPath $pluginRepairSource -Force | ForEach-Object {
+  Copy-Item -LiteralPath $_.FullName -Destination $pluginRepairDir -Recurse -Force
+}
 
 $connectorText = Get-Content -Raw -LiteralPath $connectorTemplate
 $connectorText = $connectorText.Replace("__CODEXPP_ROOT__", (Convert-ToJsStringLiteral $codexPlusPlusRoot))

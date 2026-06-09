@@ -120,6 +120,37 @@ function Copy-DirectoryByBytes {
   return $count
 }
 
+function Stop-ProcessesUnderPath {
+  param([string]$Path)
+
+  if (-not (Test-Path -LiteralPath $Path)) { return }
+
+  $root = [IO.Path]::GetFullPath($Path).TrimEnd("\")
+  $processes = @(
+    Get-CimInstance Win32_Process -ErrorAction SilentlyContinue |
+      Where-Object {
+        if (-not $_.ExecutablePath) { return $false }
+
+        try {
+          $exe = [IO.Path]::GetFullPath($_.ExecutablePath)
+        } catch {
+          return $false
+        }
+
+        return $exe.StartsWith($root + "\", [StringComparison]::OrdinalIgnoreCase)
+      }
+  )
+
+  foreach ($process in $processes) {
+    Write-Host ("Stopping process using old bundled mirror: {0} ({1})" -f $process.Name, $process.ProcessId)
+    Stop-Process -Id $process.ProcessId -Force -ErrorAction SilentlyContinue
+  }
+
+  if ($processes.Count -gt 0) {
+    Start-Sleep -Seconds 1
+  }
+}
+
 function Invoke-Codex {
   param(
     [string]$CodexCli,
@@ -346,6 +377,7 @@ Write-Host "Source marketplace: $sourceMarketplace"
 
 Write-Step "Mirroring openai-bundled marketplace into Codex home"
 $mirror = Join-Path $CodexHome "bundled-marketplaces\openai-bundled"
+Stop-ProcessesUnderPath -Path $mirror
 $copied = Copy-DirectoryByBytes -Source $sourceMarketplace -Destination $mirror
 Write-Host "Mirror: $mirror"
 Write-Host "Files copied: $copied"
@@ -353,6 +385,7 @@ Write-Host "Files copied: $copied"
 Write-Step "Mirroring resources-shaped bundled plugin source"
 $resourcesMirrorRoot = Join-Path $CodexHome "bundled-resources"
 $resourcesMirror = Join-Path $resourcesMirrorRoot "plugins\openai-bundled"
+Stop-ProcessesUnderPath -Path $resourcesMirror
 $resourcesCopied = Copy-DirectoryByBytes -Source $sourceMarketplace -Destination $resourcesMirror
 Write-Host "Resources mirror: $resourcesMirror"
 Write-Host "Files copied: $resourcesCopied"
